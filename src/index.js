@@ -1,5 +1,4 @@
 import "./styles.css";
-// import logo from "./images/insure.svg";
 import info from "./data.json";
 
 const main = document.querySelector(".main");
@@ -20,17 +19,28 @@ const createListing = (data) => {
   const companyInfo = document.createElement("div");
   companyInfo.classList.add("listingInfo");
 
+  const companyHead = document.createElement("div");
+  companyHead.classList.add("companyHead");
+
   const companyName = document.createElement("p");
   companyName.classList.add("companyName");
   companyName.textContent = data.company;
+  companyHead.appendChild(companyName);
 
   // add new and featured buttons
+  data.new ? createBadge("new", companyHead) : "";
+  data.featured ? createBadge("featured", companyHead) : "";
 
   const position = document.createElement("p");
   position.classList.add("position");
   position.textContent = data.position;
 
   const logistics = document.createElement("div");
+  logistics.classList.add("logistics");
+
+  // const separator = document.createElement("span");
+  // separator.classList.add("separator");
+
   const postedAt = document.createElement("span");
   postedAt.textContent = data.postedAt;
 
@@ -40,11 +50,22 @@ const createListing = (data) => {
   const location = document.createElement("span");
   location.textContent = data.location;
 
+  //filter tags
+  const filterContainer = document.createElement("div");
+  filterContainer.classList.add("filterContainer");
+  createFilterTag(data.role, filterContainer);
+  createFilterTag(data.level, filterContainer);
+  createFilterTag(...[data.languages], filterContainer);
+  // filterContainer.appendChild(createFilterTag(data.role));
+  // filterContainer.appendChild(createFilterTag(data.level));
+  // filterContainer.appendChild(createFilterTag(...[data.languages]));
+  data.tools ? createFilterTag(...[data.tools], filterContainer) : "";
+
   logistics.appendChild(postedAt);
   logistics.appendChild(contract);
   logistics.appendChild(location);
 
-  companyInfo.appendChild(companyName);
+  companyInfo.appendChild(companyHead);
   companyInfo.appendChild(position);
   companyInfo.appendChild(logistics);
 
@@ -52,8 +73,24 @@ const createListing = (data) => {
   infoContainer.appendChild(companyInfo);
 
   listingContainer.appendChild(infoContainer);
+  listingContainer.appendChild(filterContainer);
 
   main.appendChild(listingContainer);
+};
+
+const createBadge = (type, element) => {
+  const badge = document.createElement("span");
+  badge.classList.add(`${type}`);
+  badge.classList.add("badge");
+  badge.textContent = type;
+  element.appendChild(badge);
+};
+
+const createFilterTag = (tag, element) => {
+  const filterTag = document.createElement("span");
+  filterTag.classList.add("filterTag");
+  filterTag.textContent = tag;
+  element.appendChild(filterTag);
 };
 
 info.map(createListing);
