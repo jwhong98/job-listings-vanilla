@@ -2,6 +2,8 @@ import "./styles.css";
 import info from "./data.json";
 
 const main = document.querySelector(".main");
+let filters = [];
+let filtered = [];
 
 const createListing = (data) => {
   const listingContainer = document.createElement("div");
@@ -57,11 +59,11 @@ const createListing = (data) => {
   createFilterTag(data.role, filterContainer);
   createFilterTag(data.level, filterContainer);
   data.languages.map((language) => {
-    createFilterTag(language, filterContainer);
+    createFilterTag(language, filterContainer, "languages");
   });
 
   data.tools.map((tool) => {
-    createFilterTag(tool, filterContainer);
+    createFilterTag(tool, filterContainer, "tools");
   });
 
   logistics.appendChild(postedAt);
@@ -89,11 +91,54 @@ const createBadge = (type, element) => {
   element.appendChild(badge);
 };
 
-const createFilterTag = (tag, element) => {
+const createFilterTag = (tag, element, type) => {
   const filterTag = document.createElement("span");
   filterTag.classList.add("filterTag");
   filterTag.textContent = tag;
+
+  filterTag.addEventListener("click", () => {
+    filterHandler(tag, type);
+  });
   element.appendChild(filterTag);
+};
+
+const clearListings = () => {
+  while (main.firstChild) {
+    main.removeChild(main.firstChild);
+  }
+};
+
+const filterHandler = (tag, type) => {
+  //only works for languages/tools filters
+  filters.includes(tag) ? "" : filters.push(tag);
+  let list;
+  if (filtered.length == 0) {
+    console.log("using info");
+    list = info;
+  } else {
+    console.log("using filtered");
+    list = filtered;
+  }
+  console.log(list);
+  clearListings();
+  // if (!type) {
+  //   info.map((listing) =>
+  //     listing.includes(tag) ? createListing(listing) : ""
+  //   );
+  // }
+  filters.map((filter) => {
+    list.map((listing) => {
+      // listing[type].includes(filter) ? createListing(listing) : "";
+      listing[type].includes(filter)
+        ? !filtered.includes(listing)
+          ? filtered.push(listing)
+          : ""
+        : "";
+    });
+  });
+  console.log(filtered);
+
+  filtered.map(createListing);
 };
 
 info.map(createListing);
