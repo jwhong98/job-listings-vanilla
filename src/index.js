@@ -60,7 +60,9 @@ const createListing = (data) => {
     createFilterTag(language, filterContainer);
   });
 
-  data.tools !== [] ? createFilterTag(...[data.tools], filterContainer) : "";
+  data.tools.map((tool) => {
+    createFilterTag(tool, filterContainer);
+  });
 
   logistics.appendChild(postedAt);
   logistics.appendChild(contract);
