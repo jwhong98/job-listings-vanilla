@@ -7,6 +7,7 @@ const createListing = (data) => {
   const listingContainer = document.createElement("div");
   listingContainer.classList.add("listingContainer");
   listingContainer.dataset.id = data.id;
+  data.featured ? listingContainer.classList.add("featureContainer") : "";
 
   const infoContainer = document.createElement("div");
   infoContainer.classList.add("infoContainer");
@@ -55,11 +56,11 @@ const createListing = (data) => {
   filterContainer.classList.add("filterContainer");
   createFilterTag(data.role, filterContainer);
   createFilterTag(data.level, filterContainer);
-  createFilterTag(...[data.languages], filterContainer);
-  // filterContainer.appendChild(createFilterTag(data.role));
-  // filterContainer.appendChild(createFilterTag(data.level));
-  // filterContainer.appendChild(createFilterTag(...[data.languages]));
-  data.tools ? createFilterTag(...[data.tools], filterContainer) : "";
+  data.languages.map((language) => {
+    createFilterTag(language, filterContainer);
+  });
+
+  data.tools !== [] ? createFilterTag(...[data.tools], filterContainer) : "";
 
   logistics.appendChild(postedAt);
   logistics.appendChild(contract);
